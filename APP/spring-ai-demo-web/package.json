@@ -1,0 +1,29 @@
+{
+  "name": "spring-ai-demo-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "sse.js": "^2.5.0",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5",
+    "vuetify": "^3.7.4"
+  },
+  "devDependencies": {
+    "@mdi/font": "^7.4.47",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vue-macros/reactivity-transform": "^1.1.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "prettier": "3.3.3",
+    "tailwindcss": "^3.4.15",
+    "unplugin-auto-import": "^0.18.5",
+    "vite": "^5.4.10"
+  }
+}
