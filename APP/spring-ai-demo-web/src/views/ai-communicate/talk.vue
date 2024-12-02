@@ -168,6 +168,7 @@ const sendMsg = () => {
     aiSessionId: selectedSession.value,  // 当前活动会话ID
     creatorId: user.value.userId, // 创建者ID
     editorId: user.value.userId, // 编辑者ID（如果需要的话）
+    enableVectorStore: true,
     type: 'user',  // 消息类型
     textContent: msg.value,  // 用户输入的文本消息
     // medias: [],  // 如果有媒体文件，可以在这里添加
@@ -191,17 +192,31 @@ const sendMsg = () => {
   // 监听 SSE 消息
   evtSource.addEventListener('message', async (event) => {
     const response = JSON.parse(event.data);
+    console.log(response);
     // const finishReason = response.result.metadata.finishReason;
     if (response) {
-        // 每次接收到新的部分消息，拼接到当前消息内容
-        currentMessage += response;
+          // 检查是否结束
+        if (response  === '[complete]') {
+            console.log('停止事件源');
+            //信息持久化
+            saveMessage(chatMessage);
+            let aiMessage = {
+                aiSessionId: selectedSession.value,  // 当前活动会话ID
+                creatorId: user.value.userId, // 创建者ID
+                editorId: user.value.userId, // 编辑者ID（如果需要的话）
+                type: 'assistant',  // 消息类型
+                textContent: currentMessage,  // AI生成的文本消息
+
+            }
+            saveMessage(aiMessage);
+            evtSource.close(); // 停止事件源
+        }else{
+       // 每次接收到新的部分消息，拼接到当前消息内容
+       currentMessage += response;
         // 实时更新活动列表中的消息内容
         currentActivity.content = currentMessage;
-      // 检查是否结束
-      if (finishReason && finishReason.toLowerCase() === 'stop') {
-        console.log('停止事件源');
-        evtSource.close(); // 停止事件源
-      }
+        }
+ 
     }
   });
 
@@ -280,6 +295,12 @@ const init = (data) => {
   user.value = data;
   getSessionList(data.userId);
   userInitDialog.value = false;
+}
+//保存聊天信息
+const saveMessage = (data) => {
+  proxy.$api.ai.saveMessage(data).then((res) => {
+    console.log(res);
+  });
 }
 // 初始加载
 onMounted(() => {

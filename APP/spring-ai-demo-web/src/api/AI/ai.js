@@ -47,4 +47,11 @@ export default {
         method: 'get',
     })
     },
+    saveMessage(data){
+      return request({
+        url: '/message/save',
+        method: 'post',
+        data: data
+    })
+    },
 };

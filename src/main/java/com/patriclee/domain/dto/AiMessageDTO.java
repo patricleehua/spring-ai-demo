@@ -42,7 +42,10 @@ public class AiMessageDTO {
      * 媒体内容如图片链接、语音链接
      */
     private Map<String, String> medias;
-
+    /**
+     * 是否使用RAG检索增强
+     */
+    private boolean enableVectorStore = false;
     /**
      * 创建时间
      */

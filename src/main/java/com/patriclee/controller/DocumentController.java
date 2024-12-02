@@ -9,11 +9,17 @@ import org.springframework.ai.reader.JsonReader;
 import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.vectorstore.filter.Filter;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RequestMapping("/document")
@@ -74,13 +80,42 @@ public class DocumentController {
     }
     /**
      * 查询向量数据库
+     * 简单测试
      *
-     * @param query 用户的提问
+     * @param question 用户的提问
      * @return 匹配到的文档
      */
 
+//    @GetMapping("query")
+//    public List<Document> query(@RequestParam String query) {
+//        return vectorStore.similaritySearch(query);
+//    }
     @GetMapping("query")
-    public List<Document> query(@RequestParam String query) {
-        return vectorStore.similaritySearch(query);
+    public List<Document> query(@RequestParam String question) {
+
+        FilterExpressionBuilder builder = new FilterExpressionBuilder();
+        Filter.Expression filterExpression = builder.in("question",
+                Collections.singletonList("*"+question+"*")).build();
+
+        System.out.println("Generated filter expression: " + filterExpression);
+
+        // 先查元数据
+        SearchRequest metaSearchRequest = SearchRequest
+                .query(question)
+                .withTopK(3) //指定要返回的相似文档的最大数量
+                .withSimilarityThreshold(0.1)
+                .withFilterExpression(filterExpression);
+        List<Document> metaDocuments = vectorStore.similaritySearch(metaSearchRequest);
+        if (!CollectionUtils.isEmpty(metaDocuments)) {
+            return metaDocuments;
+        }
+
+        // 元数据没查到在相似搜索
+        SearchRequest searchRequest = SearchRequest
+                .query(question)
+                .withTopK(2)
+                .withSimilarityThreshold(0.1);
+
+        return vectorStore.similaritySearch(searchRequest);
     }
 }
