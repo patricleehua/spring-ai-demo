@@ -54,4 +54,21 @@ export default {
         data: data
     })
     },
+    getHistoryMessages(conversationId, lastN) {
+      return request({
+        url: '/message/history',
+        method: 'get',
+        params: { 
+          conversationId: conversationId, 
+          lastN: lastN 
+        }
+    })
+    },
+    cleanHistory(conversationId) {
+      return request({
+        url: '/message/history/'+conversationId,
+        method: 'delete',
+     
+    })
+    },
 };

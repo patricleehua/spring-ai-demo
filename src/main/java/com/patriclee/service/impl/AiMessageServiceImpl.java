@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.patriclee.domain.dto.AiMessageDTO;
 import com.patriclee.domain.entity.AiMessage;
 import com.patriclee.domain.mapper.AiMessageMapper;
+import com.patriclee.domain.vo.AiMessageVo;
 import com.patriclee.service.AiMessageService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -80,6 +83,25 @@ public class AiMessageServiceImpl extends ServiceImpl<AiMessageMapper, AiMessage
         return aiMessage;
     }
 
+    @Override
+    public List<AiMessageVo> getAiMessageListBySessionId(String conversationId, int lastN) {
+        AiMessageMapper aiMessageMapper = this.getBaseMapper();
+        LambdaQueryWrapper<AiMessage> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AiMessage::getAiSessionId, conversationId);
+        queryWrapper.orderBy(true, false, AiMessage::getCreateTime);
+        queryWrapper.last("limit "+lastN);
+        List<AiMessage> aiMessages = aiMessageMapper.selectList(queryWrapper);
+        Collections.reverse(aiMessages);
+        return  aiMessages.stream().map(this::convertToAiMessageVo).toList();
+    }
+    private AiMessageVo convertToAiMessageVo(AiMessage aiMessage) {
+        AiMessageVo aiMessageVo = new AiMessageVo();
+        BeanUtils.copyProperties(aiMessage, aiMessageVo);
+        aiMessageVo.setId(String.valueOf(aiMessage.getId()));
+        aiMessageVo.setAiSessionId(String.valueOf(aiMessage.getId()));
+        aiMessageVo.setCreatorId(String.valueOf(aiMessage.getId()));
+        return aiMessageVo;
+    }
 }
 
 

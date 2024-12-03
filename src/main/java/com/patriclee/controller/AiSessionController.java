@@ -1,8 +1,7 @@
 package com.patriclee.controller;
 
-import com.patriclee.domain.AiSessionVo;
+import com.patriclee.domain.vo.AiSessionVo;
 import com.patriclee.domain.dto.AiSessionDto;
-import com.patriclee.domain.entity.AiSession;
 import com.patriclee.service.AiSessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

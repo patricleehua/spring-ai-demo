@@ -3,6 +3,7 @@ package com.patriclee.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.patriclee.domain.dto.AiMessageDTO;
 import com.patriclee.domain.entity.AiMessage;
+import com.patriclee.domain.vo.AiMessageVo;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface AiMessageService extends IService<AiMessage> {
     void saveAiMessage(AiMessageDTO aiMessageDTO);
 
      AiMessage convertToAiMessage(AiMessageDTO aiMessageDTO) ;
+
+    List<AiMessageVo> getAiMessageListBySessionId(String conversationId, int lastN);
 }

@@ -1,7 +1,7 @@
 package com.patriclee.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.patriclee.domain.AiSessionVo;
+import com.patriclee.domain.vo.AiSessionVo;
 import com.patriclee.domain.dto.AiSessionDto;
 import com.patriclee.domain.entity.AiSession;
 

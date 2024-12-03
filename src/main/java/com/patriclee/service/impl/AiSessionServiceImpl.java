@@ -2,7 +2,7 @@ package com.patriclee.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.patriclee.domain.AiSessionVo;
+import com.patriclee.domain.vo.AiSessionVo;
 import com.patriclee.domain.dto.AiSessionDto;
 import com.patriclee.domain.entity.AiMessage;
 import com.patriclee.domain.entity.AiSession;

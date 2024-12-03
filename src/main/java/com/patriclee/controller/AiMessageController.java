@@ -3,6 +3,7 @@ package com.patriclee.controller;
 
 import com.patriclee.domain.dto.AiMessageDTO;
 import com.patriclee.domain.entity.AiMessage;
+import com.patriclee.domain.vo.AiMessageVo;
 import com.patriclee.service.AiMessageChatMemory;
 import com.patriclee.service.AiMessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 
 import static com.alibaba.dashscope.utils.JsonUtils.toJson;
 
@@ -54,6 +56,22 @@ public class AiMessageController {
     @PostMapping("/save")
     public void save(@RequestBody AiMessageDTO aiMessageDTO) {
         aiMessageService.saveAiMessage(aiMessageDTO);
+    }
+
+    /**
+     * 获取历史消息
+     * @param conversationId
+     * @param lastN
+     * @return
+     */
+    @GetMapping("/history")
+    public List<AiMessageVo> getAiMessageListBySessionId(@RequestParam String conversationId,@RequestParam int lastN) {
+        return aiMessageService.getAiMessageListBySessionId(conversationId, lastN);
+    }
+
+    @DeleteMapping("/history/{sessionId}")
+    public void deleteHistory(@PathVariable String sessionId) {
+        chatMemory.clear(sessionId);
     }
 
     /**

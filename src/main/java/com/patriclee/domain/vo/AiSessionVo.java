@@ -1,4 +1,4 @@
-package com.patriclee.domain;
+package com.patriclee.domain.vo;
 
 import lombok.Data;
 
